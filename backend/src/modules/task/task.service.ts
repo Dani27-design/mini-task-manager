@@ -6,7 +6,7 @@ import { AppError } from "../../middleware/error.middleware";
 import { createUuid } from "../../utils/uuid";
 import { createAuditLog } from "./audit.repository";
 import { CreateTaskInput } from "./task.schemas";
-import { createTask, Task } from "./task.repository";
+import { createTask, listTasks, Task } from "./task.repository";
 
 type CreateTaskDependencies = {
   createTaskRecord: typeof createTask;
@@ -56,4 +56,8 @@ export async function createTaskService(
   });
 
   return task;
+}
+
+export async function listTasksService(): Promise<Task[]> {
+  return listTasks();
 }

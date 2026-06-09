@@ -10,3 +10,8 @@ export async function createTask(request: CreateTaskRequest): Promise<Task> {
   const response = await axios.post<Task>("/tasks", request);
   return response.data;
 }
+
+export async function getTasks(): Promise<Task[]> {
+  const response = await axios.get<Task[]>("/tasks");
+  return response.data;
+}

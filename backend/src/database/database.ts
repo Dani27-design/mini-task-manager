@@ -32,6 +32,19 @@ export function get<T>(sql: string, params: unknown[] = []): Promise<T | undefin
   });
 }
 
+export function all<T>(sql: string, params: unknown[] = []): Promise<T[]> {
+  return new Promise((resolve, reject) => {
+    database.all(sql, params, (error, rows: T[]) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve(rows);
+    });
+  });
+}
+
 export async function transaction<T>(operation: () => Promise<T>): Promise<T> {
   await run("BEGIN");
 

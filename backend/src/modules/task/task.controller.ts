@@ -1,5 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { createTaskService } from "./task.service";
+import { createTaskService, listTasksService } from "./task.service";
+
+export async function listTasksController(
+  _request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const tasks = await listTasksService();
+    response.json(tasks);
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function createTaskController(
   request: Request,

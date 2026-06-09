@@ -326,7 +326,7 @@ Each phase must include:
 
 ---
 
-## PHASE 4 — LIST TASKS
+## PHASE 4 — LIST TASKS — DONE
 
 ### Backend Tasks
 - Implement GET /tasks endpoint
