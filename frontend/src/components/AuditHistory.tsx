@@ -29,19 +29,19 @@ export function AuditHistory({ taskId }: AuditHistoryProps) {
   }, [taskId]);
 
   if (isLoading) {
-    return <p>Loading audit history...</p>;
+    return <p className="muted">Loading audit history...</p>;
   }
 
   if (errorMessage) {
-    return <p>{errorMessage}</p>;
+    return <p className="error-text">{errorMessage}</p>;
   }
 
   if (auditLogs.length === 0) {
-    return <p>No audit history yet.</p>;
+    return <p className="muted">No audit history yet.</p>;
   }
 
   return (
-    <section>
+    <section className="audit-history">
       {auditLogs.map((auditLog) => (
         <AuditEvent key={auditLog.id} auditLog={auditLog} />
       ))}

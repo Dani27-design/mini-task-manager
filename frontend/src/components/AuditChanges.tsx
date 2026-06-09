@@ -1,4 +1,5 @@
 import { AuditLogChange } from "../types/audit";
+import { formatFieldName, formatFieldValue } from "../utils/display";
 
 type AuditChangesProps = {
   changes: AuditLogChange[];
@@ -10,10 +11,19 @@ export function AuditChanges({ changes }: AuditChangesProps) {
   }
 
   return (
-    <ul>
+    <ul className="audit-changes">
       {changes.map((change) => (
         <li key={change.id}>
-          {change.fieldName}: {change.previousValue ?? ""} -&gt; {change.currentValue ?? ""}
+          <span className="change-field">{formatFieldName(change.fieldName)}</span>
+          <span className="change-value">
+            {formatFieldValue(change.fieldName, change.previousValue)}
+          </span>
+          <span className="change-divider" aria-hidden="true">
+            →
+          </span>
+          <span className="change-value current-value">
+            {formatFieldValue(change.fieldName, change.currentValue)}
+          </span>
         </li>
       ))}
     </ul>

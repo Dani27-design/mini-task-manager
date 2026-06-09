@@ -12,8 +12,8 @@ before(async () => {
   const databaseDirectory = mkdtempSync(join(tmpdir(), "mini-task-manager-audit-test-"));
   process.env.DATABASE_PATH = join(databaseDirectory, "test.sqlite");
 
-  const { app } = await import("../src/app");
-  const { initDatabase } = await import("../src/database/init");
+  const { app } = await import("../../src/app");
+  const { initDatabase } = await import("../../src/database/init");
 
   await initDatabase();
 

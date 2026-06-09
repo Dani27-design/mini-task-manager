@@ -8,18 +8,26 @@ export function TaskPage() {
   const [taskRefreshKey, setTaskRefreshKey] = useState(0);
 
   return (
-    <main>
-      <h1>Mini Task Manager</h1>
-      <ActorSelect value={selectedActorId} onChange={setSelectedActorId} />
-      <TaskForm
-        actorId={selectedActorId}
-        onTaskCreated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
-      />
-      <TaskList
-        actorId={selectedActorId}
-        refreshKey={taskRefreshKey}
-        onTaskUpdated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
-      />
+    <main className="app-shell">
+      <header className="app-header">
+        <div>
+          <h1>Mini Task Manager</h1>
+          <p>Track tasks and every change made to them.</p>
+        </div>
+        <ActorSelect value={selectedActorId} onChange={setSelectedActorId} />
+      </header>
+
+      <div className="workspace">
+        <TaskForm
+          actorId={selectedActorId}
+          onTaskCreated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
+        />
+        <TaskList
+          actorId={selectedActorId}
+          refreshKey={taskRefreshKey}
+          onTaskUpdated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
+        />
+      </div>
     </main>
   );
 }

@@ -35,21 +35,27 @@ export function TaskForm({ actorId, onTaskCreated }: TaskFormProps) {
   }
 
   return (
-    <section>
-      <h2>Create Task</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="task-title">Title</label>
-        <input
-          id="task-title"
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-        />
-        <button type="submit" disabled={isSubmitting || !title.trim() || !actorId}>
+    <section className="panel create-panel">
+      <div className="panel-heading">
+        <h2>Create Task</h2>
+      </div>
+      <form className="create-form" onSubmit={handleSubmit}>
+        <div className="field">
+          <label htmlFor="task-title">Title</label>
+          <input
+            id="task-title"
+            className="text-input"
+            type="text"
+            placeholder="Add a task title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </div>
+        <button className="button primary-button" type="submit" disabled={isSubmitting || !title.trim() || !actorId}>
           {isSubmitting ? "Creating..." : "Create"}
         </button>
       </form>
-      {errorMessage ? <p>{errorMessage}</p> : null}
+      {errorMessage ? <p className="error-text">{errorMessage}</p> : null}
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { deleteTask, updateTask } from "../services/task.api";
 import { Task } from "../types/task";
+import { formatStatus } from "../utils/display";
 import { AuditHistory } from "./AuditHistory";
 
 type TaskRowProps = {
@@ -63,43 +64,52 @@ export function TaskRow({ actorId, task, onTaskUpdated }: TaskRowProps) {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor={`task-title-${task.id}`}>Title</label>
-        <input
-          id={`task-title-${task.id}`}
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-        />
-        <label htmlFor={`task-status-${task.id}`}>Status</label>
-        <select
-          id={`task-status-${task.id}`}
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-        >
-          {taskStatuses.map((taskStatus) => (
-            <option key={taskStatus} value={taskStatus}>
-              {taskStatus}
-            </option>
-          ))}
-        </select>
-        <button type="submit" disabled={isSubmitting || !title.trim() || !actorId}>
-          {isSubmitting ? "Saving..." : "Save"}
-        </button>
+    <article className="task-card">
+      <form className="task-edit-form" onSubmit={handleSubmit}>
+        <div className="field title-field">
+          <label htmlFor={`task-title-${task.id}`}>Title</label>
+          <input
+            id={`task-title-${task.id}`}
+            className="text-input"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </div>
+        <div className="field status-field">
+          <label htmlFor={`task-status-${task.id}`}>Status</label>
+          <select
+            id={`task-status-${task.id}`}
+            className="select-input status-select"
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+          >
+            {taskStatuses.map((taskStatus) => (
+              <option key={taskStatus} value={taskStatus}>
+                {formatStatus(taskStatus)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="task-actions">
+          <button className="button primary-button" type="submit" disabled={isSubmitting || !title.trim() || !actorId}>
+            {isSubmitting ? "Saving..." : "Save"}
+          </button>
+          <button className="button danger-button" type="button" disabled={isSubmitting || !actorId} onClick={handleDelete}>
+            Delete
+          </button>
+          <button
+            className="button secondary-button"
+            type="button"
+            onClick={() => setIsAuditHistoryOpen((currentValue) => !currentValue)}
+          >
+            {isAuditHistoryOpen ? "Hide history" : "Show history"}
+          </button>
+        </div>
       </form>
-      <button type="button" disabled={isSubmitting || !actorId} onClick={handleDelete}>
-        Delete
-      </button>
-      <button
-        type="button"
-        onClick={() => setIsAuditHistoryOpen((currentValue) => !currentValue)}
-      >
-        {isAuditHistoryOpen ? "Hide history" : "Show history"}
-      </button>
-      <p>Last updated: {new Date(task.updatedAt).toLocaleString()}</p>
-      {errorMessage ? <p>{errorMessage}</p> : null}
+      <p className="task-meta">Last updated: {new Date(task.updatedAt).toLocaleString()}</p>
+      {errorMessage ? <p className="error-text">{errorMessage}</p> : null}
       {isAuditHistoryOpen ? <AuditHistory taskId={task.id} /> : null}
-    </div>
+    </article>
   );
 }

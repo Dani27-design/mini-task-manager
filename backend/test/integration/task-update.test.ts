@@ -5,18 +5,6 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, before, test } from "node:test";
 
-test("isValidStatusTransition enforces the linear task workflow", async () => {
-  const { isValidStatusTransition } = await import("../src/modules/task/task.service");
-
-  assert.equal(isValidStatusTransition("to_do", "pending"), true);
-  assert.equal(isValidStatusTransition("pending", "in_progress"), true);
-  assert.equal(isValidStatusTransition("in_progress", "done"), true);
-  assert.equal(isValidStatusTransition("to_do", "to_do"), true);
-  assert.equal(isValidStatusTransition("to_do", "in_progress"), false);
-  assert.equal(isValidStatusTransition("pending", "done"), false);
-  assert.equal(isValidStatusTransition("done", "in_progress"), false);
-});
-
 let server: Server;
 let baseUrl: string;
 let getRow: <T>(sql: string, params?: unknown[]) => Promise<T | undefined>;
@@ -26,9 +14,9 @@ before(async () => {
   const databaseDirectory = mkdtempSync(join(tmpdir(), "mini-task-manager-update-test-"));
   process.env.DATABASE_PATH = join(databaseDirectory, "test.sqlite");
 
-  const { app } = await import("../src/app");
-  const { all, get, run } = await import("../src/database/database");
-  const { initDatabase } = await import("../src/database/init");
+  const { app } = await import("../../src/app");
+  const { all, get, run } = await import("../../src/database/database");
+  const { initDatabase } = await import("../../src/database/init");
 
   getRow = get;
   getRows = all;

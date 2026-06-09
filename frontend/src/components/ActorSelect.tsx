@@ -29,12 +29,13 @@ export function ActorSelect({ value, onChange }: ActorSelectProps) {
   }, []);
 
   return (
-    <section>
-      <h2>Actor</h2>
-      {isLoading ? <p>Loading actors...</p> : null}
-      {errorMessage ? <p>{errorMessage}</p> : null}
+    <section className="actor-panel" aria-label="Actor selection">
+      <h2>User</h2>
+      {isLoading ? <p className="muted">Loading actors...</p> : null}
+      {errorMessage ? <p className="error-text">{errorMessage}</p> : null}
       {!isLoading && !errorMessage ? (
         <select
+          className="select-input"
           value={value}
           onChange={(event) => onChange(event.target.value)}
         >

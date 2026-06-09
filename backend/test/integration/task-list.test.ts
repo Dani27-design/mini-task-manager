@@ -12,9 +12,9 @@ before(async () => {
   const databaseDirectory = mkdtempSync(join(tmpdir(), "mini-task-manager-list-test-"));
   process.env.DATABASE_PATH = join(databaseDirectory, "test.sqlite");
 
-  const { app } = await import("../src/app");
-  const { run } = await import("../src/database/database");
-  const { initDatabase } = await import("../src/database/init");
+  const { app } = await import("../../src/app");
+  const { run } = await import("../../src/database/database");
+  const { initDatabase } = await import("../../src/database/init");
 
   await initDatabase();
   await run(

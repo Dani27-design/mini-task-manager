@@ -4,7 +4,7 @@ import { Server } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, before, test } from "node:test";
-import { errorMiddleware } from "../src/middleware/error.middleware";
+import { errorMiddleware } from "../../src/middleware/error.middleware";
 
 let server: Server;
 let baseUrl: string;
@@ -13,8 +13,8 @@ before(async () => {
   const databaseDirectory = mkdtempSync(join(tmpdir(), "mini-task-manager-error-test-"));
   process.env.DATABASE_PATH = join(databaseDirectory, "test.sqlite");
 
-  const { app } = await import("../src/app");
-  const { initDatabase } = await import("../src/database/init");
+  const { app } = await import("../../src/app");
+  const { initDatabase } = await import("../../src/database/init");
 
   await initDatabase();
 

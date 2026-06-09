@@ -31,13 +31,18 @@ export function TaskList({ actorId, refreshKey, onTaskUpdated }: TaskListProps) 
   }, [refreshKey]);
 
   return (
-    <section>
-      <h2>Tasks</h2>
-      {isLoading ? <p>Loading tasks...</p> : null}
-      {errorMessage ? <p>{errorMessage}</p> : null}
-      {!isLoading && !errorMessage && tasks.length === 0 ? <p>No tasks yet.</p> : null}
+    <section className="panel task-panel">
+      <div className="panel-heading">
+        <h2>Tasks</h2>
+        {!isLoading && !errorMessage ? <span>{tasks.length} active</span> : null}
+      </div>
+      {isLoading ? <p className="muted">Loading tasks...</p> : null}
+      {errorMessage ? <p className="error-text">{errorMessage}</p> : null}
+      {!isLoading && !errorMessage && tasks.length === 0 ? (
+        <div className="empty-state">No tasks yet.</div>
+      ) : null}
       {!isLoading && !errorMessage && tasks.length > 0 ? (
-        <div>
+        <div className="task-list">
           {tasks.map((task) => (
             <TaskRow key={task.id} actorId={actorId} task={task} onTaskUpdated={onTaskUpdated} />
           ))}
