@@ -21,3 +21,11 @@ export const updateTaskSchema = z
   .strict();
 
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+
+export const deleteTaskSchema = z
+  .object({
+    actorId: z.string().trim().min(1)
+  })
+  .strict();
+
+export type DeleteTaskInput = z.infer<typeof deleteTaskSchema>;

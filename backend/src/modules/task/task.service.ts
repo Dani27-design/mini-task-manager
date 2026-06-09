@@ -5,8 +5,15 @@ import { transaction } from "../../database/database";
 import { AppError } from "../../middleware/error.middleware";
 import { createUuid } from "../../utils/uuid";
 import { createAuditLog, createAuditLogChange } from "./audit.repository";
-import { CreateTaskInput, UpdateTaskInput } from "./task.schemas";
-import { createTask, findTaskById, listTasks, Task, updateTask } from "./task.repository";
+import { CreateTaskInput, DeleteTaskInput, UpdateTaskInput } from "./task.schemas";
+import {
+  createTask,
+  findTaskById,
+  listTasks,
+  softDeleteTask,
+  Task,
+  updateTask
+} from "./task.repository";
 
 type CreateTaskDependencies = {
   createTaskRecord: typeof createTask;
@@ -166,4 +173,38 @@ export async function updateTaskService(taskId: string, input: UpdateTaskInput):
   });
 
   return updatedTask;
+}
+
+export async function deleteTaskService(taskId: string, input: DeleteTaskInput): Promise<Task> {
+  const actorExists = actors.some((actor) => actor.id === input.actorId);
+
+  if (!actorExists) {
+    throw new AppError("VALIDATION_ERROR", "Actor does not exist", 400);
+  }
+
+  const existingTask = await findTaskById(taskId);
+
+  if (!existingTask || existingTask.deletedAt) {
+    throw new AppError("TASK_NOT_FOUND", "Task not found", 404);
+  }
+
+  const now = new Date().toISOString();
+  const deletedTask: Task = {
+    ...existingTask,
+    updatedAt: now,
+    deletedAt: now
+  };
+
+  await transaction(async () => {
+    await softDeleteTask(taskId, now);
+    await createAuditLog({
+      id: createUuid(),
+      taskId,
+      actorId: input.actorId,
+      action: auditActions[2],
+      createdAt: now
+    });
+  });
+
+  return deletedTask;
 }

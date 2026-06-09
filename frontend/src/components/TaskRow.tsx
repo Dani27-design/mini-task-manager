@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { updateTask } from "../services/task.api";
+import { deleteTask, updateTask } from "../services/task.api";
 import { Task } from "../types/task";
 
 type TaskRowProps = {
@@ -42,6 +42,24 @@ export function TaskRow({ actorId, task, onTaskUpdated }: TaskRowProps) {
     }
   }
 
+  async function handleDelete() {
+    if (!actorId) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      await deleteTask(task.id, { actorId });
+      onTaskUpdated();
+    } catch {
+      setErrorMessage("Failed to delete task.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -68,6 +86,9 @@ export function TaskRow({ actorId, task, onTaskUpdated }: TaskRowProps) {
           {isSubmitting ? "Saving..." : "Save"}
         </button>
       </form>
+      <button type="button" disabled={isSubmitting || !actorId} onClick={handleDelete}>
+        Delete
+      </button>
       <p>Last updated: {new Date(task.updatedAt).toLocaleString()}</p>
       {errorMessage ? <p>{errorMessage}</p> : null}
     </div>

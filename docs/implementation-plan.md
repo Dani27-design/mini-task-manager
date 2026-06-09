@@ -381,7 +381,7 @@ Each phase must include:
 
 ---
 
-## PHASE 6 — DELETE TASK
+## PHASE 6 — DELETE TASK — DONE
 
 ### Backend Tasks
 - Implement DELETE /tasks/:id endpoint

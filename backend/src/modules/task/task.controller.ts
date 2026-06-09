@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { createTaskService, listTasksService, updateTaskService } from "./task.service";
+import {
+  createTaskService,
+  deleteTaskService,
+  listTasksService,
+  updateTaskService
+} from "./task.service";
 
 export async function listTasksController(
   _request: Request,
@@ -35,6 +40,20 @@ export async function updateTaskController(
   try {
     const taskId = String(request.params.id);
     const task = await updateTaskService(taskId, request.body);
+    response.json(task);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteTaskController(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const taskId = String(request.params.id);
+    const task = await deleteTaskService(taskId, request.body);
     response.json(task);
   } catch (error) {
     next(error);

@@ -49,3 +49,14 @@ export async function updateTask(task: Task): Promise<void> {
     [task.title, task.status, task.updatedAt, task.id]
   );
 }
+
+export async function softDeleteTask(id: string, deletedAt: string): Promise<void> {
+  await run(
+    `
+      UPDATE tasks
+      SET updatedAt = ?, deletedAt = ?
+      WHERE id = ?
+    `,
+    [deletedAt, deletedAt, id]
+  );
+}
