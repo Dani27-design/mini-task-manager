@@ -1,4 +1,4 @@
-import { all, run } from "../../database/database";
+import { all, get, run } from "../../database/database";
 
 export type Task = {
   id: string;
@@ -26,4 +26,26 @@ export async function listTasks(): Promise<Task[]> {
     WHERE deletedAt IS NULL
     ORDER BY updatedAt DESC
   `);
+}
+
+export async function findTaskById(id: string): Promise<Task | undefined> {
+  return get<Task>(
+    `
+      SELECT id, title, status, createdAt, updatedAt, deletedAt
+      FROM tasks
+      WHERE id = ?
+    `,
+    [id]
+  );
+}
+
+export async function updateTask(task: Task): Promise<void> {
+  await run(
+    `
+      UPDATE tasks
+      SET title = ?, status = ?, updatedAt = ?
+      WHERE id = ?
+    `,
+    [task.title, task.status, task.updatedAt, task.id]
+  );
 }

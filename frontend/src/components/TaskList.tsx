@@ -4,10 +4,12 @@ import { Task } from "../types/task";
 import { TaskRow } from "./TaskRow";
 
 type TaskListProps = {
+  actorId: string;
   refreshKey: number;
+  onTaskUpdated: () => void;
 };
 
-export function TaskList({ refreshKey }: TaskListProps) {
+export function TaskList({ actorId, refreshKey, onTaskUpdated }: TaskListProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -37,7 +39,7 @@ export function TaskList({ refreshKey }: TaskListProps) {
       {!isLoading && !errorMessage && tasks.length > 0 ? (
         <div>
           {tasks.map((task) => (
-            <TaskRow key={task.id} task={task} />
+            <TaskRow key={task.id} actorId={actorId} task={task} onTaskUpdated={onTaskUpdated} />
           ))}
         </div>
       ) : null}

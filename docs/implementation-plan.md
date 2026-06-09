@@ -347,7 +347,7 @@ Each phase must include:
 
 ---
 
-## PHASE 5 — UPDATE TASK
+## PHASE 5 — UPDATE TASK — DONE
 
 ### Backend Tasks
 - Implement PUT /tasks/:id endpoint

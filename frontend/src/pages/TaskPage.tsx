@@ -15,7 +15,11 @@ export function TaskPage() {
         actorId={selectedActorId}
         onTaskCreated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
       />
-      <TaskList refreshKey={taskRefreshKey} />
+      <TaskList
+        actorId={selectedActorId}
+        refreshKey={taskRefreshKey}
+        onTaskUpdated={() => setTaskRefreshKey((currentValue) => currentValue + 1)}
+      />
     </main>
   );
 }
