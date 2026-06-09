@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { deleteTask, updateTask } from "../services/task.api";
 import { Task } from "../types/task";
+import { AuditHistory } from "./AuditHistory";
 
 type TaskRowProps = {
   actorId: string;
@@ -14,6 +15,7 @@ export function TaskRow({ actorId, task, onTaskUpdated }: TaskRowProps) {
   const [title, setTitle] = useState(task.title);
   const [status, setStatus] = useState(task.status);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuditHistoryOpen, setIsAuditHistoryOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -89,8 +91,15 @@ export function TaskRow({ actorId, task, onTaskUpdated }: TaskRowProps) {
       <button type="button" disabled={isSubmitting || !actorId} onClick={handleDelete}>
         Delete
       </button>
+      <button
+        type="button"
+        onClick={() => setIsAuditHistoryOpen((currentValue) => !currentValue)}
+      >
+        {isAuditHistoryOpen ? "Hide history" : "Show history"}
+      </button>
       <p>Last updated: {new Date(task.updatedAt).toLocaleString()}</p>
       {errorMessage ? <p>{errorMessage}</p> : null}
+      {isAuditHistoryOpen ? <AuditHistory taskId={task.id} /> : null}
     </div>
   );
 }

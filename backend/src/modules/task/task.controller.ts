@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   createTaskService,
   deleteTaskService,
+  listTaskAuditLogsService,
   listTasksService,
   updateTaskService
 } from "./task.service";
@@ -27,6 +28,20 @@ export async function createTaskController(
   try {
     const task = await createTaskService(request.body);
     response.status(201).json(task);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function listTaskAuditLogsController(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const taskId = String(request.params.id);
+    const auditLogs = await listTaskAuditLogsService(taskId);
+    response.json(auditLogs);
   } catch (error) {
     next(error);
   }

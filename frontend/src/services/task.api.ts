@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AuditLog } from "../types/audit";
 import { Task } from "../types/task";
 
 type CreateTaskRequest = {
@@ -35,5 +36,10 @@ export async function deleteTask(id: string, request: DeleteTaskRequest): Promis
   const response = await axios.delete<Task>(`/tasks/${id}`, {
     data: request
   });
+  return response.data;
+}
+
+export async function getTaskAuditLogs(taskId: string): Promise<AuditLog[]> {
+  const response = await axios.get<AuditLog[]>(`/tasks/${taskId}/audit-logs`);
   return response.data;
 }

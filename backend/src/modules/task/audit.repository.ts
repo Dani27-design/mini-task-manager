@@ -1,4 +1,4 @@
-import { run } from "../../database/database";
+import { all, run } from "../../database/database";
 
 export type AuditLog = {
   id: string;
@@ -14,6 +14,10 @@ export type AuditLogChange = {
   fieldName: string;
   previousValue: string | null;
   currentValue: string | null;
+};
+
+export type AuditLogWithChanges = AuditLog & {
+  changes: AuditLogChange[];
 };
 
 export async function createAuditLog(auditLog: AuditLog): Promise<void> {
@@ -39,5 +43,37 @@ export async function createAuditLogChange(change: AuditLogChange): Promise<void
       change.previousValue,
       change.currentValue
     ]
+  );
+}
+
+export async function listAuditLogsByTaskId(taskId: string): Promise<AuditLog[]> {
+  return all<AuditLog>(
+    `
+      SELECT id, taskId, actorId, action, createdAt
+      FROM audit_logs
+      WHERE taskId = ?
+      ORDER BY createdAt DESC
+    `,
+    [taskId]
+  );
+}
+
+export async function listAuditLogChangesByAuditLogIds(
+  auditLogIds: string[]
+): Promise<AuditLogChange[]> {
+  if (auditLogIds.length === 0) {
+    return [];
+  }
+
+  const placeholders = auditLogIds.map(() => "?").join(", ");
+
+  return all<AuditLogChange>(
+    `
+      SELECT id, auditLogId, fieldName, previousValue, currentValue
+      FROM audit_log_changes
+      WHERE auditLogId IN (${placeholders})
+      ORDER BY fieldName ASC
+    `,
+    auditLogIds
   );
 }

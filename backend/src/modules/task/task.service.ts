@@ -4,7 +4,13 @@ import { taskStatuses } from "../../constants/task-status";
 import { transaction } from "../../database/database";
 import { AppError } from "../../middleware/error.middleware";
 import { createUuid } from "../../utils/uuid";
-import { createAuditLog, createAuditLogChange } from "./audit.repository";
+import {
+  AuditLogChange,
+  createAuditLog,
+  createAuditLogChange,
+  listAuditLogChangesByAuditLogIds,
+  listAuditLogsByTaskId
+} from "./audit.repository";
 import { CreateTaskInput, DeleteTaskInput, UpdateTaskInput } from "./task.schemas";
 import {
   createTask,
@@ -35,6 +41,16 @@ type TaskChange = {
   fieldName: "title" | "status";
   previousValue: string;
   currentValue: string;
+};
+
+export type TaskAuditLog = {
+  id: string;
+  taskId: string;
+  actorId: string;
+  actorName: string;
+  action: string;
+  createdAt: string;
+  changes: AuditLogChange[];
 };
 
 const validStatusTransitions = new Map<string, string>([
@@ -207,4 +223,34 @@ export async function deleteTaskService(taskId: string, input: DeleteTaskInput):
   });
 
   return deletedTask;
+}
+
+export async function listTaskAuditLogsService(taskId: string): Promise<TaskAuditLog[]> {
+  const task = await findTaskById(taskId);
+
+  if (!task) {
+    throw new AppError("TASK_NOT_FOUND", "Task not found", 404);
+  }
+
+  const auditLogs = await listAuditLogsByTaskId(taskId);
+  const changes = await listAuditLogChangesByAuditLogIds(
+    auditLogs.map((auditLog) => auditLog.id)
+  );
+  const changesByAuditLogId = new Map<string, AuditLogChange[]>();
+
+  for (const change of changes) {
+    const existingChanges = changesByAuditLogId.get(change.auditLogId) ?? [];
+    existingChanges.push(change);
+    changesByAuditLogId.set(change.auditLogId, existingChanges);
+  }
+
+  return auditLogs.map((auditLog) => {
+    const actor = actors.find((currentActor) => currentActor.id === auditLog.actorId);
+
+    return {
+      ...auditLog,
+      actorName: actor?.name ?? auditLog.actorId,
+      changes: changesByAuditLogId.get(auditLog.id) ?? []
+    };
+  });
 }
