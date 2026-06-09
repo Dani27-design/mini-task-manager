@@ -278,7 +278,7 @@ Each phase must include:
 
 ---
 
-## PHASE 2 — ACTORS
+## PHASE 2 — ACTORS — DONE
 
 ### Backend Tasks
 - Define static actor list in backend constants

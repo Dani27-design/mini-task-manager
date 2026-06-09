@@ -1,6 +1,7 @@
 import express from "express";
 import { initDatabase } from "./database/init";
 import { errorMiddleware } from "./middleware/error.middleware";
+import { actorRouter } from "./modules/actor/actor.routes";
 import { taskRouter } from "./modules/task/task.routes";
 
 const app = express();
@@ -8,6 +9,7 @@ const port = Number(process.env.PORT ?? 3000);
 const host = process.env.HOST ?? "127.0.0.1";
 
 app.use(express.json());
+app.use("/actors", actorRouter);
 app.use("/tasks", taskRouter);
 app.use(errorMiddleware);
 
