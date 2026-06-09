@@ -1,6 +1,12 @@
 import { TaskRow } from "./TaskRow";
 
-export function TaskList() {
+type TaskListProps = {
+  refreshKey: number;
+};
+
+export function TaskList({ refreshKey }: TaskListProps) {
+  void refreshKey;
+
   return (
     <section>
       <h2>Tasks</h2>

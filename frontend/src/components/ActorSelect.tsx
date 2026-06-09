@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { getActors } from "../services/actor.api";
 import { Actor } from "../types/actor";
 
-export function ActorSelect() {
+type ActorSelectProps = {
+  value: string;
+  onChange: (actorId: string) => void;
+};
+
+export function ActorSelect({ value, onChange }: ActorSelectProps) {
   const [actors, setActors] = useState<Actor[]>([]);
-  const [selectedActorId, setSelectedActorId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -12,7 +16,9 @@ export function ActorSelect() {
     getActors()
       .then((actorList) => {
         setActors(actorList);
-        setSelectedActorId(actorList[0]?.id ?? "");
+        if (!value) {
+          onChange(actorList[0]?.id ?? "");
+        }
       })
       .catch(() => {
         setErrorMessage("Failed to load actors.");
@@ -29,8 +35,8 @@ export function ActorSelect() {
       {errorMessage ? <p>{errorMessage}</p> : null}
       {!isLoading && !errorMessage ? (
         <select
-          value={selectedActorId}
-          onChange={(event) => setSelectedActorId(event.target.value)}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
         >
           {actors.map((actor) => (
             <option key={actor.id} value={actor.id}>

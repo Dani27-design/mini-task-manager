@@ -5,7 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/actors": "http://127.0.0.1:3000"
+      "/actors": "http://127.0.0.1:3000",
+      "/tasks": "http://127.0.0.1:3000"
     }
   }
 });

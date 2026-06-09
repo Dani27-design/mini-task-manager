@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node src/app.ts",
+    "dev": "ts-node src/server.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "start": "node dist/app.js"
+    "start": "node dist/server.js",
+    "test": "node --test -r ts-node/register test/**/*.test.ts"
   },
   "dependencies": {
     "express": "^5.1.0",
